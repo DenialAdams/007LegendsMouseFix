@@ -7,14 +7,17 @@ mouse-derived look samples with a linear response.
 
 ## Compatibility
 
-Verified with `Bond2012PC.exe` SHA-256:
+Developed and verified against this reference `Bond2012PC.exe` SHA-256:
 
 ```text
 1C149608AB83F25555928B8A12F20B06E046D5A79DEE7A5E2835B8B088309409
 ```
 
-Other executable versions are rejected by hook signature and image-size checks rather
-than patched blindly.
+The DLL does **not** calculate or require a whole-file hash. Compatibility is determined
+at runtime using the PE image size and the exact instruction signatures at the two hook
+locations. Common in-place hex edits, including resolution edits, remain compatible as
+long as they do not move or alter those hook instructions. If a required signature does
+not match, the fix does not patch that location blindly.
 
 ## Installation
 

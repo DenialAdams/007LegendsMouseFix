@@ -8,6 +8,9 @@ later when mouse look is routed through the same nonlinear response function use
 look controls.
 
 Addresses below are for the verified Steam executable with image base `0x00400000`.
+Its SHA-256 is a reference identifier only; the fix intentionally performs no whole-file
+hash check. Runtime validation is localized to PE image size and hook-site instruction
+signatures so unrelated in-place edits, such as resolution hex edits, are accepted.
 
 ## Traced input path
 

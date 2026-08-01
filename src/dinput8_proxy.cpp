@@ -18,6 +18,8 @@ using UpdatePlayerInputFn = void(__thiscall*)(void*, int);
 using ApplyLookCurveFn = float*(__thiscall*)(void*, float*, float, float, float, float);
 
 constexpr uintptr_t kPreferredImageBase = 0x00400000;
+// Deliberately avoid a whole-file hash check: unrelated in-place EXE edits (for example,
+// resolution patches) are compatible when these localized hook signatures still match.
 constexpr uintptr_t kExportMouseStateAddress = 0x008FF9A0;
 constexpr uintptr_t kExportMouseStateRva = kExportMouseStateAddress - kPreferredImageBase;
 constexpr uintptr_t kUpdatePlayerInputAddress = 0x005C67F0;
