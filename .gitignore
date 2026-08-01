@@ -1,0 +1,28 @@
+# CMake and Visual Studio build output
+/build/
+/build-*/
+/probe/build/
+/release/
+/CMakeFiles/
+/CMakeCache.txt
+/.vs/
+*.sln
+*.vcxproj*
+*.user
+*.suo
+
+# Compiled artifacts and diagnostic output
+*.dll
+*.exe
+*.exp
+*.ilk
+*.lib
+*.obj
+*.pdb
+*.zip
+*.log
+
+# Reverse-engineering project data is intentionally local
+*.gpr
+*.rep/
+*.gzf

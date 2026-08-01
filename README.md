@@ -1,0 +1,96 @@
+# 007 Legends Mouse Acceleration Fix
+
+A mouse-only linear response fix for the 32-bit Steam release of **007 Legends**.
+The game routes raw DirectInput mouse movement through a controller-style quadratic
+response curve. This proxy keeps the game's input system intact while replacing only
+mouse-derived look samples with a linear response.
+
+## Compatibility
+
+Verified with `Bond2012PC.exe` SHA-256:
+
+```text
+1C149608AB83F25555928B8A12F20B06E046D5A79DEE7A5E2835B8B088309409
+```
+
+Other executable versions are rejected by hook signature and image-size checks rather
+than patched blindly.
+
+## Installation
+
+1. Download the release ZIP.
+2. Copy `dinput8.dll` and `007MouseFix.ini` beside `Bond2012PC.exe`.
+3. Start the game normally.
+
+Default Steam location:
+
+```text
+C:\Program Files (x86)\Steam\steamapps\common\007 Legends
+```
+
+The final build does not attach a debugger, set watchpoints, modify the executable, or
+create diagnostic logs.
+
+## Configuration
+
+```ini
+[Mouse]
+Enabled=1
+HorizontalMultiplier=1.7
+VerticalMultiplier=4.6
+```
+
+The two multipliers change linear sensitivity only; increasing them does **not** add
+acceleration. Valid values are `0.05` through `20.0`. Restart the game after editing the
+file. Set `Enabled=0` to keep the proxy installed while disabling linearization.
+
+## What was fixed
+
+The active camera path applies these curves before high-speed clipping:
+
+```text
+horizontal = 54.675 * x * abs(x)
+vertical   = 87.48  * y * abs(y)
+```
+
+The fix uses scale values already calculated by the game and replaces that response with:
+
+```text
+horizontal = x * gameHorizontalScale * HorizontalMultiplier
+vertical   = y * gameVerticalScale   * VerticalMultiplier
+```
+
+Mouse samples are identified by comparing the mouse-specific exported look pair with the
+active look pair. Controller input continues through the original curve.
+
+See [docs/ReverseEngineering.md](docs/ReverseEngineering.md) for the traced input path and
+function addresses.
+
+## Building
+
+Requirements:
+
+- Windows
+- Visual Studio 2022 with the Desktop development with C++ workload
+- CMake 3.20 or newer
+
+Build the 32-bit release:
+
+```powershell
+cmake -S . -B build -A Win32
+cmake --build build --config Release
+```
+
+The DLL and INI are written to `build/Release`.
+
+To build the research helpers and smoke tests as well:
+
+```powershell
+cmake -S . -B build-tools -A Win32 -DBUILD_RESEARCH_TOOLS=ON
+cmake --build build-tools --config Release
+```
+
+## Uninstalling
+
+Exit the game and delete `dinput8.dll` and `007MouseFix.ini` from the game directory.
+The original game files are never changed.
